@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- Dados das Fotos (Unsplash de alta qualidade para esportes) ---
+// --- Dados das Fotos ---
 const PHOTOS = [
   { id: 1, url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=1200', category: 'Futebol', title: 'O Chute Decisivo' },
   { id: 2, url: 'https://images.unsplash.com/photo-1461896736644-31911f99c722?auto=format&fit=crop&q=80&w=1200', category: 'Corrida', title: 'Explosão na Largada' },
@@ -66,7 +66,7 @@ const Navbar = () => {
 
 const PortfolioApp = () => {
   const [filter, setFilter] = useState('Todos');
-  const [selectedPhoto, setSelectedPhoto] = useState<typeof PHOTOS[0] | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   const categories = ['Todos', 'Futebol', 'Corrida', 'Basquete', 'Radicais'];
   
@@ -78,7 +78,6 @@ const PortfolioApp = () => {
     <div className="min-h-screen bg-zinc-950 text-white selection:bg-red-600">
       <Navbar />
       
-      {/* Hero Section */}
       <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
         <img 
           src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=1920" 
@@ -108,7 +107,6 @@ const PortfolioApp = () => {
         </div>
       </section>
 
-      {/* Gallery Section */}
       <section id="portfolio" className="py-24 container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div>
@@ -156,7 +154,6 @@ const PortfolioApp = () => {
         </div>
       </section>
 
-      {/* Footer / Contact */}
       <footer id="contato" className="py-24 bg-zinc-900/50 text-center px-6">
         <h2 className="text-3xl font-black italic uppercase mb-8">Vamos elevar o nível da sua imagem?</h2>
         <div className="flex flex-col items-center gap-6">
@@ -170,7 +167,6 @@ const PortfolioApp = () => {
         </div>
       </footer>
 
-      {/* Lightbox Modal */}
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div 
@@ -181,7 +177,7 @@ const PortfolioApp = () => {
             <button className="absolute top-10 right-10 text-white/50 hover:text-white"><X size={40} /></button>
             <motion.img 
               initial={{ scale: 0.9 }} animate={{ scale: 1 }}
-              src={selectedPhoto.url} 
+              src={(selectedPhoto as any).url} 
               className="max-w-full max-h-full object-contain"
             />
           </motion.div>
@@ -191,12 +187,7 @@ const PortfolioApp = () => {
   );
 };
 
-// Renderização Principal Robusta
 const rootElement = document.getElementById('root');
 if (rootElement) {
-  createRoot(rootElement).render(
-    <React.StrictMode>
-      <PortfolioApp />
-    </React.StrictMode>
-  );
+  createRoot(rootElement).render(<PortfolioApp />);
 }
