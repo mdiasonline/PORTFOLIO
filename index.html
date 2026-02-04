@@ -7,14 +7,15 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- IMPORTMAP CORRIGIDO: Versões únicas e estáveis -->
     <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom": "https://esm.sh/react-dom@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "framer-motion": "https://esm.sh/framer-motion@11.11.17?external=react,react-dom",
-    "lucide-react": "https://esm.sh/lucide-react@0.454.0?external=react,react-dom",
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "framer-motion": "https://esm.sh/framer-motion@10.16.4?external=react,react-dom",
+    "lucide-react": "https://esm.sh/lucide-react@0.344.0?external=react,react-dom",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/"
   }
@@ -44,19 +45,47 @@
         ::-webkit-scrollbar-thumb { background: var(--accent); }
 
         #root {
+            display: block;
             background-color: #000;
             min-height: 100vh;
+            position: relative;
+            z-index: 1;
         }
 
         .text-outline {
             -webkit-text-stroke: 1px rgba(255,255,255,0.3);
             color: transparent;
         }
+        
+        /* Error fallback */
+        #error-display {
+            display: none;
+            padding: 20px;
+            color: red;
+            background: #111;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999;
+            font-family: monospace;
+        }
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>
+    <div id="error-display"></div>
     <div id="root"></div>
+    
+    <!-- Script de segurança para capturar erros de carregamento -->
+    <script>
+        window.addEventListener('error', function(e) {
+            const errorDiv = document.getElementById('error-display');
+            if (document.getElementById('root').innerHTML.trim() === '') {
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = '<h1>Erro de Carregamento</h1><p>' + e.message + '</p><p>Verifique o console para mais detalhes.</p>';
+            }
+        });
+    </script>
+
     <script type="module" src="./index.tsx"></script>
 <script type="module" src="/index.tsx"></script>
 </body>

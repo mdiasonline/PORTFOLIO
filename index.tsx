@@ -95,7 +95,7 @@ const Hero = () => {
   const y = useTransform(scrollYProgress, [0, 1], [0, 400]);
 
   return (
-    <section id="inicio" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
+    <section id="inicio" className="relative h-screen flex items-center justify-center bg-black overflow-hidden z-0">
       <motion.div style={{ y }} className="absolute inset-0 z-0">
         <img 
           src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=90&w=1920" 
@@ -103,9 +103,9 @@ const Hero = () => {
           alt="Action"
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black z-10" />
       
-      <div className="relative z-10 text-center container mx-auto px-6">
+      <div className="relative z-20 text-center container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -133,7 +133,7 @@ const PortfolioGrid = () => {
   const [selected, setSelected] = useState<any>(null);
 
   return (
-    <section id="projetos" className="py-32 bg-black">
+    <section id="projetos" className="relative py-32 bg-black z-10">
       <div className="container mx-auto px-6 mb-20">
         <div className="flex items-end justify-between border-b border-zinc-900 pb-10">
           <h2 className="text-6xl md:text-9xl font-black italic uppercase tracking-tighter leading-none">Arquivo</h2>
@@ -184,7 +184,7 @@ const PortfolioGrid = () => {
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               src={selected.url} 
-              className="max-w-full max-h-full object-contain"
+              className="max-w-full max-h-full object-contain pointer-events-none select-none"
             />
           </motion.div>
         )}
@@ -195,7 +195,7 @@ const PortfolioGrid = () => {
 
 const Footer = () => {
   return (
-    <footer id="contato" className="bg-zinc-950 py-40 border-t border-white/5">
+    <footer id="contato" className="relative bg-zinc-950 py-40 border-t border-white/5 z-10">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-5xl md:text-[10rem] font-black italic uppercase tracking-tighter leading-none mb-16">
           BOOK A <span className="text-red-600 text-outline">SESSION</span>
@@ -227,12 +227,13 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Garante que a tela de loading suma
     const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className="bg-black text-white selection:bg-red-600 selection:text-white">
+    <div className="bg-black text-white selection:bg-red-600 selection:text-white min-h-screen">
       <AnimatePresence>
         {loading && (
           <motion.div 
@@ -270,8 +271,11 @@ const App = () => {
   );
 };
 
+// Inicialização segura
 const container = document.getElementById('root');
 if (container) {
   const root = createRoot(container);
   root.render(<App />);
+} else {
+  console.error("Critical: #root element not found");
 }
