@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MDIAS FOTOGRAFIA | Portfolio</title>
+    <title>MDIAS | Studio de Fotografia</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -13,8 +13,8 @@
     "react": "https://esm.sh/react@19.0.0",
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "framer-motion": "https://esm.sh/framer-motion@11.11.11?deps=react@19.0.0",
-    "lucide-react": "https://esm.sh/lucide-react@0.454.0?deps=react@19.0.0",
+    "framer-motion": "https://esm.sh/framer-motion@12.0.0-alpha.0?external=react,react-dom",
+    "lucide-react": "https://esm.sh/lucide-react@0.454.0?external=react,react-dom",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/"
   }
@@ -22,25 +22,33 @@
 </script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:wght@400;700&display=swap');
         
+        :root {
+            --accent: #ff0000;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #09090b;
+            font-family: 'Inter Tight', sans-serif;
+            background-color: #000;
+            color: #fff;
             margin: 0;
-            color: white;
             overflow-x: hidden;
         }
 
-        /* Scrollbar Premium */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #09090b; }
-        ::-webkit-scrollbar-thumb { background: #dc2626; }
-        
-        .text-stroke {
-            -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); }
+
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
             color: transparent;
         }
+        
+        /* Previne flash branco no carregamento */
+        html { background: #000; }
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
