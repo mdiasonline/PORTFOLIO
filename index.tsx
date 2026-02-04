@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { 
@@ -32,16 +32,16 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-6 md:p-8 flex justify-between items-center ${scrolled ? 'bg-black/80 backdrop-blur-lg' : 'bg-transparent'}`}>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-6 md:p-8 flex justify-between items-center ${scrolled ? 'bg-black/90 backdrop-blur-xl border-b border-white/5' : 'bg-transparent'}`}>
         <div className="flex items-center gap-2">
           <Camera className="text-red-600" size={24} />
           <span className="text-xl font-black italic tracking-tighter uppercase">MDIAS<span className="text-red-600">.</span></span>
         </div>
         <button 
           onClick={() => setIsOpen(true)} 
-          className="bg-white text-black p-2 md:px-4 md:py-2 flex items-center gap-3 hover:bg-red-600 hover:text-white transition-all"
+          className="bg-white text-black p-2 md:px-5 md:py-2.5 flex items-center gap-3 hover:bg-red-600 hover:text-white transition-all transform active:scale-95"
         >
-          <span className="mono text-[10px] font-bold uppercase tracking-widest hidden md:block">Menu</span>
+          <span className="mono text-[10px] font-bold uppercase tracking-widest hidden md:block">Explorar</span>
           <Menu size={20} />
         </button>
       </nav>
@@ -49,21 +49,21 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, scale: 1.1 }}
+            initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
             className="fixed inset-0 z-[200] bg-zinc-950 p-10 flex flex-col justify-between"
           >
             <div className="flex justify-between items-center">
-              <span className="mono text-[10px] text-red-600 uppercase tracking-widest font-bold">Menu Principal</span>
-              <button onClick={() => setIsOpen(false)} className="hover:text-red-600 transition-colors"><X size={48} /></button>
+              <span className="mono text-[10px] text-red-600 uppercase tracking-widest font-bold">Diretório</span>
+              <button onClick={() => setIsOpen(false)} className="hover:text-red-600 transition-colors p-2"><X size={48} /></button>
             </div>
             
             <div className="flex flex-col gap-2">
               {['Início', 'Projetos', 'Contato'].map((item, i) => (
                 <motion.a 
                   key={item}
-                  initial={{ x: -50, opacity: 0 }}
+                  initial={{ x: -30, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.1 * i }}
                   href={`#${item.toLowerCase()}`}
@@ -77,10 +77,10 @@ const Navbar = () => {
 
             <div className="flex justify-between items-end border-t border-white/10 pt-10">
               <div className="mono text-[10px] text-zinc-500">
-                BASED IN BRAZIL<br/>AVAILABLE WORLDWIDE
+                FOTOGRAFIA ESPORTIVA<br/>BRAZIL BASED
               </div>
               <div className="flex gap-6">
-                <Instagram size={24} className="hover:text-red-600 cursor-pointer transition-colors" />
+                <Instagram size={28} className="hover:text-red-600 cursor-pointer transition-colors" />
               </div>
             </div>
           </motion.div>
@@ -92,35 +92,35 @@ const Navbar = () => {
 
 const Hero = () => {
   const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 400]);
 
   return (
     <section id="inicio" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
       <motion.div style={{ y }} className="absolute inset-0 z-0">
         <img 
           src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=90&w=1920" 
-          className="w-full h-full object-cover opacity-50 grayscale"
-          alt="Sports Photography Background"
+          className="w-full h-full object-cover opacity-60 grayscale brightness-50"
+          alt="Action"
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
       
       <div className="relative z-10 text-center container mx-auto px-6">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="mono text-red-600 text-xs uppercase tracking-[0.5em] mb-4 block font-bold">Fotografia Esportiva de Elite</span>
-          <h1 className="text-7xl md:text-[14rem] font-black italic uppercase tracking-tighter leading-[0.75] mb-8">
-            VIVA A <br/><span className="text-red-600">GLÓRIA.</span>
+          <span className="mono text-red-600 text-[10px] md:text-xs uppercase tracking-[0.6em] mb-6 block font-bold">Capturando a Essência do Esporte</span>
+          <h1 className="text-[14vw] md:text-[13rem] font-black italic uppercase tracking-tighter leading-[0.75] mb-12">
+            RAW <br/><span className="text-red-600">POWER.</span>
           </h1>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-12">
-            <p className="max-w-xs text-zinc-400 font-medium leading-relaxed italic text-sm md:text-base border-l-2 border-red-600 pl-4 text-left">
-              Eternizando o momento exato onde o esforço se torna história. Sem filtros, apenas a verdade do esporte.
+          <div className="flex flex-col md:flex-row items-center justify-center gap-10">
+            <p className="max-w-xs text-zinc-400 font-medium leading-relaxed italic text-sm border-l border-red-600 pl-6 text-left">
+              Não é apenas sobre a foto. É sobre o suor, a tensão e o milésimo de segundo que define um campeão.
             </p>
-            <a href="#projetos" className="bg-red-600 text-white px-10 py-4 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-2">
-              Ver Galeria <ArrowRight size={18} />
+            <a href="#projetos" className="group bg-red-600 text-white px-12 py-5 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-3">
+              Explorar Obras <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
         </motion.div>
@@ -134,35 +134,37 @@ const PortfolioGrid = () => {
 
   return (
     <section id="projetos" className="py-32 bg-black">
-      <div className="container mx-auto px-6 mb-16">
-        <div className="flex items-baseline justify-between border-b border-zinc-900 pb-8">
-          <h2 className="text-5xl md:text-8xl font-black italic uppercase tracking-tighter">Trabalhos</h2>
-          <span className="mono text-xs text-zinc-600 uppercase">2023 — 2024</span>
+      <div className="container mx-auto px-6 mb-20">
+        <div className="flex items-end justify-between border-b border-zinc-900 pb-10">
+          <h2 className="text-6xl md:text-9xl font-black italic uppercase tracking-tighter leading-none">Arquivo</h2>
+          <span className="mono text-[10px] text-zinc-700 uppercase tracking-widest mb-2">PROJETOS SELECIONADOS</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 auto-rows-[400px] md:auto-rows-[550px] gap-4 px-4 md:px-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 auto-rows-[450px] md:auto-rows-[600px] gap-6 px-4 md:px-10">
         {PROJECTS.map((p, i) => (
           <motion.div
             key={p.id}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className={`relative group overflow-hidden bg-zinc-900 ${p.size === 'large' ? 'lg:col-span-8' : 'lg:col-span-4'}`}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: i * 0.05 }}
+            className={`relative group overflow-hidden bg-zinc-950 ${p.size === 'large' ? 'lg:col-span-8' : 'lg:col-span-4'}`}
             onClick={() => setSelected(p)}
           >
             <img 
               src={p.url} 
-              className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+              className="w-full h-full object-cover grayscale transition-all duration-[1s] group-hover:grayscale-0 group-hover:scale-110"
               alt={p.title}
             />
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center cursor-pointer">
-              <Maximize2 className="text-white scale-50 group-hover:scale-100 transition-transform" size={48} />
+            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+              <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center scale-0 group-hover:scale-100 transition-transform duration-500">
+                <Maximize2 className="text-white" size={24} />
+              </div>
             </div>
-            <div className="absolute bottom-8 left-8">
-              <span className="mono text-[10px] text-red-600 uppercase tracking-widest block mb-2">{p.category}</span>
-              <h3 className="text-3xl font-black italic uppercase tracking-tight">{p.title}</h3>
+            <div className="absolute bottom-10 left-10 transition-transform duration-500 group-hover:-translate-y-2">
+              <span className="mono text-[10px] text-red-600 uppercase tracking-widest block mb-2 font-bold">{p.category}</span>
+              <h3 className="text-4xl font-black italic uppercase tracking-tight">{p.title}</h3>
             </div>
           </motion.div>
         ))}
@@ -174,15 +176,15 @@ const PortfolioGrid = () => {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[300] bg-black/98 flex items-center justify-center p-6"
+            className="fixed inset-0 z-[300] bg-black/98 flex items-center justify-center p-4 md:p-16"
             onClick={() => setSelected(null)}
           >
-            <button className="absolute top-10 right-10 hover:text-red-600 transition-colors"><X size={40} /></button>
+            <button className="absolute top-10 right-10 text-white hover:text-red-600 transition-colors z-[310]"><X size={48} /></button>
             <motion.img 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
               src={selected.url} 
-              className="max-w-full max-h-full object-contain shadow-2xl"
+              className="max-w-full max-h-full object-contain"
             />
           </motion.div>
         )}
@@ -193,29 +195,27 @@ const PortfolioGrid = () => {
 
 const Footer = () => {
   return (
-    <footer id="contato" className="bg-zinc-950 py-32 border-t border-white/5">
+    <footer id="contato" className="bg-zinc-950 py-40 border-t border-white/5">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-4xl md:text-[8rem] font-black italic uppercase tracking-tighter leading-none mb-12">
-          CONTATO <span className="text-red-600">IMEDIATO</span>
+        <h2 className="text-5xl md:text-[10rem] font-black italic uppercase tracking-tighter leading-none mb-16">
+          BOOK A <span className="text-red-600 text-outline">SESSION</span>
         </h2>
         
-        <div className="flex flex-col items-center gap-10">
-          <a href="mailto:contato@mdias.photography" className="text-2xl md:text-5xl font-black italic border-b-2 border-red-600 pb-2 hover:text-red-600 transition-colors">
-            CONTATO@MDIAS.COM.BR
+        <div className="flex flex-col items-center gap-12">
+          <a href="mailto:hello@mdias.com" className="text-2xl md:text-6xl font-black italic hover:text-red-600 transition-all border-b-4 border-red-600/20 hover:border-red-600 pb-4">
+            HELLO@MDIASFOTO.COM
           </a>
           
-          <div className="flex gap-10">
-            <Instagram size={32} className="hover:text-red-600 cursor-pointer transition-colors" />
-            <div className="w-[1px] h-8 bg-zinc-800" />
-            <span className="mono text-xs uppercase tracking-widest text-zinc-500 self-center">São Paulo / SP</span>
+          <div className="flex gap-12 mt-10">
+            <Instagram size={36} className="hover:text-red-600 cursor-pointer transition-colors" />
           </div>
         </div>
 
-        <div className="mt-40 flex flex-col md:flex-row justify-between items-center gap-6 mono text-[10px] text-zinc-700 uppercase tracking-[0.3em]">
-          <span>© 2024 MDIAS — DIREITOS RESERVADOS</span>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">BEHANCE</a>
-            <a href="#" className="hover:text-white transition-colors">LINKEDIN</a>
+        <div className="mt-48 flex flex-col md:flex-row justify-between items-center gap-8 mono text-[10px] text-zinc-700 uppercase tracking-[0.5em]">
+          <span>© 2024 MDIAS — ALL RIGHTS RESERVED</span>
+          <div className="flex gap-10">
+            <a href="#" className="hover:text-white transition-colors underline-offset-8 underline decoration-red-600/50">INSTAGRAM</a>
+            <a href="#" className="hover:text-white transition-colors underline-offset-8 underline decoration-red-600/50">BEHANCE</a>
           </div>
         </div>
       </div>
@@ -227,7 +227,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
+    const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -236,22 +236,30 @@ const App = () => {
       <AnimatePresence>
         {loading && (
           <motion.div 
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[500] bg-black flex items-center justify-center"
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-[500] bg-black flex flex-col items-center justify-center"
           >
             <motion.div 
               animate={{ opacity: [0, 1, 0] }}
-              transition={{ repeat: Infinity, duration: 1.2 }}
-              className="text-3xl font-black italic tracking-tighter"
+              transition={{ repeat: Infinity, duration: 1 }}
+              className="text-4xl font-black italic tracking-tighter"
             >
               MDIAS<span className="text-red-600">.</span>
             </motion.div>
+            <div className="mt-4 w-32 h-[1px] bg-zinc-900 relative overflow-hidden">
+               <motion.div 
+                initial={{ x: '-100%' }}
+                animate={{ x: '100%' }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="absolute inset-0 bg-red-600"
+               />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {!loading && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
           <Navbar />
           <Hero />
           <PortfolioGrid />
@@ -262,11 +270,8 @@ const App = () => {
   );
 };
 
-// Renderização segura
 const container = document.getElementById('root');
 if (container) {
   const root = createRoot(container);
   root.render(<App />);
-} else {
-  console.error("Erro: Elemento #root não encontrado no DOM.");
 }
