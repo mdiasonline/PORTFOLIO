@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { 
   Instagram, Facebook, Twitter, Menu, X, ArrowRight, Camera
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- Banco de Imagens Esportivas ---
 const PHOTOS = [
   { id: 1, url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=1200', category: 'Futebol', title: 'O Chute Decisivo' },
   { id: 2, url: 'https://images.unsplash.com/photo-1461896736644-31911f99c722?auto=format&fit=crop&q=80&w=1200', category: 'Corrida', title: 'Explosão na Largada' },
@@ -27,51 +26,39 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
+  const links = [
     { name: 'Início', href: '#home' },
     { name: 'Portfólio', href: '#portfolio' },
-    { name: 'Contato', href: '#contato' },
+    { name: 'Contato', href: '#contato' }
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-zinc-950/95 py-4 shadow-2xl border-b border-white/10 backdrop-blur-md' : 'bg-transparent py-8'}`}>
+    <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-zinc-950/95 py-4 border-b border-white/10 backdrop-blur-md' : 'bg-transparent py-8'}`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
-        <div className="text-2xl font-black italic tracking-tighter flex items-center gap-2">
-          <Camera className="text-red-600" size={28} />
-          <span className="text-red-600">MDIAS</span> FOTOGRAFIA
+        <div className="text-xl md:text-2xl font-black italic tracking-tighter flex items-center gap-2">
+          <Camera className="text-red-600" size={24} />
+          <span>MDIAS <span className="text-red-600">FOTOGRAFIA</span></span>
         </div>
         
         <div className="hidden md:flex gap-10 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-400">
-          {navLinks.map(link => (
-            <a key={link.name} href={link.href} className="hover:text-red-600 transition-colors relative group">
-              {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-red-600 transition-all group-hover:w-full"></span>
-            </a>
+          {links.map(l => (
+            <a key={l.name} href={l.href} className="hover:text-red-600 transition-colors">{l.name}</a>
           ))}
         </div>
 
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-white hover:text-red-600 transition-colors">
-          {isMenuOpen ? <X size={32} /> : <Menu size={32} />}
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-white">
+          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
       
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 100 }}
-            className="fixed inset-0 bg-zinc-950 z-40 flex flex-col items-center justify-center gap-8 md:hidden"
+            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 w-full bg-zinc-900 border-b border-white/5 flex flex-col p-8 gap-4 text-center font-black uppercase italic tracking-widest"
           >
-            {navLinks.map(link => (
-              <a 
-                key={link.name} 
-                href={link.href} 
-                onClick={() => setIsMenuOpen(false)}
-                className="text-4xl font-black italic uppercase text-white hover:text-red-600 transition-colors"
-              >
-                {link.name}
-              </a>
+            {links.map(l => (
+              <a key={l.name} href={l.href} onClick={() => setIsMenuOpen(false)}>{l.name}</a>
             ))}
           </motion.div>
         )}
@@ -82,102 +69,65 @@ const Navbar = () => {
 
 const PortfolioApp = () => {
   const [filter, setFilter] = useState('Todos');
-  const [selectedPhoto, setSelectedPhoto] = useState<any>(null);
-
+  const [selected, setSelected] = useState<any>(null);
   const categories = ['Todos', 'Futebol', 'Corrida', 'Basquete', 'Radicais'];
   
-  const filteredPhotos = useMemo(() => {
-    return filter === 'Todos' ? PHOTOS : PHOTOS.filter(p => p.category === filter);
-  }, [filter]);
+  const filtered = useMemo(() => 
+    filter === 'Todos' ? PHOTOS : PHOTOS.filter(p => p.category === filter), 
+  [filter]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white selection:bg-red-600 selection:text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <Navbar />
       
-      {/* Hero Section */}
-      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div 
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.4 }}
-          transition={{ duration: 2 }}
-          className="absolute inset-0"
-        >
-          <img 
-            src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=1920" 
-            className="w-full h-full object-cover grayscale"
-            alt="Sports Hero"
-          />
-        </motion.div>
-        
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
-        
-        <div className="relative z-10 text-center px-6 max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+      {/* Hero */}
+      <section id="home" className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+        <img 
+          src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=1920" 
+          className="absolute inset-0 w-full h-full object-cover grayscale opacity-30 scale-105"
+          alt="Hero"
+        />
+        <div className="relative z-10 text-center px-6">
+          <motion.h1 
+            initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+            className="text-6xl md:text-9xl font-black italic uppercase tracking-tighter mb-6"
           >
-            <span className="text-red-600 font-black italic uppercase tracking-[0.5em] text-xs mb-4 block">Action Photography</span>
-            <h1 className="text-7xl md:text-[10rem] font-black italic uppercase tracking-tighter leading-none mb-6">
-              REDEFINA O <br/>
-              <span className="text-stroke">LIMITE.</span>
-            </h1>
-            <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto font-light tracking-wide mb-10">
-              Capturando a intensidade, o suor e a glória em frames que eternizam a história do esporte.
-            </p>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              <a href="#portfolio" className="group bg-red-600 px-12 py-5 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-3">
-                Explorar Galeria <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-              </a>
-            </div>
-          </motion.div>
+            AÇÃO EM <br/><span className="text-red-600">FOCO.</span>
+          </motion.h1>
+          <a href="#portfolio" className="inline-flex items-center gap-3 bg-red-600 px-10 py-4 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+            Ver Portfólio <ArrowRight size={20} />
+          </a>
         </div>
       </section>
 
-      {/* Portfolio Section */}
-      <section id="portfolio" className="py-32 container mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-          <div>
-            <h2 className="text-6xl md:text-8xl font-black italic uppercase text-red-600 tracking-tighter opacity-20 absolute -translate-y-12">GALERIA</h2>
-            <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter relative z-10">Portfolio <span className="text-red-600">Esportivo</span></h2>
-            <div className="h-1 w-24 bg-red-600 mt-6" />
-          </div>
-          
-          <div className="flex flex-wrap gap-3">
-            {categories.map(cat => (
+      {/* Grid */}
+      <section id="portfolio" className="py-24 container mx-auto px-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Galeria <span className="text-red-600">2024</span></h2>
+          <div className="flex flex-wrap gap-2">
+            {categories.map(c => (
               <button 
-                key={cat} 
-                onClick={() => setFilter(cat)}
-                className={`px-6 py-2 text-[10px] font-black uppercase tracking-[0.2em] border-2 transition-all ${filter === cat ? 'bg-red-600 text-white border-red-600' : 'border-zinc-800 text-zinc-500 hover:border-zinc-600'}`}
+                key={c} onClick={() => setFilter(c)}
+                className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest border ${filter === c ? 'bg-red-600 border-red-600' : 'border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
               >
-                {cat}
+                {c}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <AnimatePresence mode="popLayout">
-            {filteredPhotos.map((photo, index) => (
+            {filtered.map(p => (
               <motion.div
-                key={photo.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ delay: index * 0.1 }}
-                className="relative aspect-[3/4] group cursor-pointer overflow-hidden bg-zinc-900 border border-white/5"
-                onClick={() => setSelectedPhoto(photo)}
+                key={p.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="relative aspect-[3/4] group cursor-pointer overflow-hidden bg-zinc-900"
+                onClick={() => setSelected(p)}
               >
-                <img 
-                  src={photo.url} 
-                  className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110 grayscale group-hover:grayscale-0" 
-                  alt={photo.title}
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
-                  <span className="text-red-600 text-[10px] font-black uppercase tracking-[0.3em] mb-2">{photo.category}</span>
-                  <h3 className="font-black text-2xl leading-tight uppercase italic">{photo.title}</h3>
+                <img src={p.url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" alt={p.title} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all p-6 flex flex-col justify-end">
+                  <span className="text-red-600 text-[10px] font-black uppercase tracking-widest mb-1">{p.category}</span>
+                  <p className="font-bold uppercase italic">{p.title}</p>
                 </div>
               </motion.div>
             ))}
@@ -185,65 +135,33 @@ const PortfolioApp = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Footer */}
       <footer id="contato" className="py-32 bg-zinc-900/30 border-t border-white/5 text-center px-6">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-4xl md:text-6xl font-black italic uppercase mb-6 tracking-tighter">
-            PRONTO PARA <span className="text-red-600">VENCER?</span>
-          </h2>
-          <p className="text-zinc-500 mb-12 text-lg">Disponível para coberturas nacionais e internacionais. Vamos contar a sua história.</p>
-          
-          <div className="flex flex-col items-center gap-10">
-            <a href="mailto:contato@mdiasfotografia.com" className="text-2xl md:text-4xl font-black hover:text-red-600 transition-colors border-b-2 border-zinc-800 pb-2">
-              contato@mdiasfotografia.com
-            </a>
-            
-            <div className="flex gap-8">
-              <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-red-600 transition-all text-white hover:-translate-y-2"><Instagram /></a>
-              <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-red-600 transition-all text-white hover:-translate-y-2"><Twitter /></a>
-              <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-red-600 transition-all text-white hover:-translate-y-2"><Facebook /></a>
-            </div>
-            
-            <div className="mt-20 pt-10 border-t border-white/5 w-full flex flex-col md:flex-row justify-between items-center gap-4 text-zinc-600 text-[10px] uppercase font-bold tracking-widest">
-              <span>© 2024 MDIAS FOTOGRAFIA. ALL RIGHTS RESERVED.</span>
-              <div className="flex gap-6">
-                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-              </div>
-            </div>
+        <h3 className="text-4xl md:text-6xl font-black italic uppercase mb-12 tracking-tighter">CONTATE O <span className="text-red-600">FOTÓGRAFO</span></h3>
+        <div className="flex flex-col items-center gap-8">
+          <a href="mailto:contato@mdias.com" className="text-2xl md:text-4xl font-black hover:text-red-600 transition-colors">contato@mdiasfotografia.com</a>
+          <div className="flex gap-6">
+            <Instagram className="hover:text-red-600 cursor-pointer" />
+            <Twitter className="hover:text-red-600 cursor-pointer" />
+            <Facebook className="hover:text-red-600 cursor-pointer" />
           </div>
+          <p className="text-zinc-700 text-[10px] font-black uppercase tracking-[0.4em] mt-12">© 2024 MDIAS FOTOGRAFIA</p>
         </div>
       </footer>
 
-      {/* Lightbox Modal */}
+      {/* Lightbox */}
       <AnimatePresence>
-        {selectedPhoto && (
+        {selected && (
           <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-zinc-950/98 flex items-center justify-center p-4 md:p-12"
-            onClick={() => setSelectedPhoto(null)}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4"
+            onClick={() => setSelected(null)}
           >
-            <button className="absolute top-8 right-8 text-white/50 hover:text-red-600 transition-colors z-50">
-              <X size={48} />
-            </button>
-            <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="relative max-w-full max-h-full flex flex-col items-center"
-              onClick={e => e.stopPropagation()}
-            >
-              <img 
-                src={selectedPhoto.url} 
-                className="max-w-full max-h-[85vh] object-contain shadow-2xl border border-white/10"
-                alt={selectedPhoto.title}
-              />
-              <div className="mt-6 text-center">
-                <span className="text-red-600 font-black italic uppercase tracking-widest text-xs">{selectedPhoto.category}</span>
-                <h4 className="text-3xl font-black italic uppercase tracking-tight">{selectedPhoto.title}</h4>
-              </div>
-            </motion.div>
+            <button className="absolute top-6 right-6 text-white/50 hover:text-white"><X size={40} /></button>
+            <motion.img 
+              initial={{ scale: 0.9 }} animate={{ scale: 1 }}
+              src={selected.url} className="max-w-full max-h-full object-contain shadow-2xl"
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -251,8 +169,8 @@ const PortfolioApp = () => {
   );
 };
 
-// Inicialização Limpa
-const rootElement = document.getElementById('root');
-if (rootElement) {
-  createRoot(rootElement).render(<PortfolioApp />);
+const container = document.getElementById('root');
+if (container) {
+  const root = createRoot(container);
+  root.render(<StrictMode><PortfolioApp /></StrictMode>);
 }
