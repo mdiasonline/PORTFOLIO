@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { 
   Instagram, 
-  ArrowUpRight, 
   Camera, 
   Menu, 
   X, 
-  ChevronRight,
-  Maximize2
+  Maximize2,
+  ArrowRight
 } from 'lucide-react';
 
+// --- Data ---
 const PROJECTS = [
   { id: 1, title: 'Velocity', category: 'Futebol', url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=90&w=1200', size: 'large' },
   { id: 2, title: 'Adrenaline', category: 'Skate', url: 'https://images.unsplash.com/photo-1521537634581-0dced2fee2ef?auto=format&fit=crop&q=90&w=1200', size: 'small' },
@@ -22,56 +22,65 @@ const PROJECTS = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-[100] mix-blend-difference p-6 md:p-10 flex justify-between items-center">
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 p-6 md:p-8 flex justify-between items-center ${scrolled ? 'bg-black/80 backdrop-blur-lg' : 'bg-transparent'}`}>
         <div className="flex items-center gap-2">
-          <Camera className="text-white" size={24} />
-          <span className="text-xl font-black italic tracking-tighter uppercase">MDIAS</span>
+          <Camera className="text-red-600" size={24} />
+          <span className="text-xl font-black italic tracking-tighter uppercase">MDIAS<span className="text-red-600">.</span></span>
         </div>
-        <button onClick={() => setIsOpen(true)} className="group flex items-center gap-3">
-          <span className="mono text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Menu</span>
-          <Menu size={32} />
+        <button 
+          onClick={() => setIsOpen(true)} 
+          className="bg-white text-black p-2 md:px-4 md:py-2 flex items-center gap-3 hover:bg-red-600 hover:text-white transition-all"
+        >
+          <span className="mono text-[10px] font-bold uppercase tracking-widest hidden md:block">Menu</span>
+          <Menu size={20} />
         </button>
       </nav>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
             className="fixed inset-0 z-[200] bg-zinc-950 p-10 flex flex-col justify-between"
           >
             <div className="flex justify-between items-center">
-              <span className="mono text-[10px] text-zinc-500 uppercase tracking-widest">Navegação</span>
-              <button onClick={() => setIsOpen(false)}><X size={48} /></button>
+              <span className="mono text-[10px] text-red-600 uppercase tracking-widest font-bold">Menu Principal</span>
+              <button onClick={() => setIsOpen(false)} className="hover:text-red-600 transition-colors"><X size={48} /></button>
             </div>
             
-            <div className="flex flex-col gap-4">
-              {['Início', 'Projetos', 'Sobre', 'Contato'].map((item, i) => (
+            <div className="flex flex-col gap-2">
+              {['Início', 'Projetos', 'Contato'].map((item, i) => (
                 <motion.a 
                   key={item}
-                  initial={{ x: 50, opacity: 0 }}
+                  initial={{ x: -50, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.1 * i }}
                   href={`#${item.toLowerCase()}`}
                   onClick={() => setIsOpen(false)}
-                  className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter hover:text-red-600 transition-colors inline-block"
+                  className="text-6xl md:text-[10rem] font-black italic uppercase tracking-tighter hover:text-red-600 transition-all leading-none"
                 >
                   {item}
                 </motion.a>
               ))}
             </div>
 
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between items-end border-t border-white/10 pt-10">
               <div className="mono text-[10px] text-zinc-500">
-                DISPONÍVEL PARA TRABALHOS<br/>EM TODO O MUNDO
+                BASED IN BRAZIL<br/>AVAILABLE WORLDWIDE
               </div>
               <div className="flex gap-6">
-                <Instagram size={24} className="hover:text-red-600 cursor-pointer" />
+                <Instagram size={24} className="hover:text-red-600 cursor-pointer transition-colors" />
               </div>
             </div>
           </motion.div>
@@ -83,39 +92,36 @@ const Navbar = () => {
 
 const Hero = () => {
   const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
 
   return (
     <section id="inicio" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
       <motion.div style={{ y }} className="absolute inset-0 z-0">
         <img 
           src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=90&w=1920" 
-          className="w-full h-full object-cover opacity-40 grayscale"
+          className="w-full h-full object-cover opacity-50 grayscale"
+          alt="Sports Photography Background"
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black" />
       
       <div className="relative z-10 text-center container mx-auto px-6">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2 }}
         >
-          <h2 className="mono text-[10px] uppercase tracking-[0.6em] mb-6 opacity-60">Visual Storytelling</h2>
-          <h1 className="text-8xl md:text-[15rem] font-black italic uppercase tracking-tighter leading-[0.8]">
-            RAW <br/><span className="text-red-600">ACTION</span>
+          <span className="mono text-red-600 text-xs uppercase tracking-[0.5em] mb-4 block font-bold">Fotografia Esportiva de Elite</span>
+          <h1 className="text-7xl md:text-[14rem] font-black italic uppercase tracking-tighter leading-[0.75] mb-8">
+            VIVA A <br/><span className="text-red-600">GLÓRIA.</span>
           </h1>
-          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-10">
-            <p className="max-w-xs text-left text-zinc-400 font-medium leading-relaxed italic border-l border-red-600 pl-4">
-              Cada segundo conta. Cada frame é um legado. Capturando a essência bruta do esporte de elite.
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-12">
+            <p className="max-w-xs text-zinc-400 font-medium leading-relaxed italic text-sm md:text-base border-l-2 border-red-600 pl-4 text-left">
+              Eternizando o momento exato onde o esforço se torna história. Sem filtros, apenas a verdade do esporte.
             </p>
-            <motion.div 
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="hidden md:block"
-            >
-              <div className="w-[1px] h-20 bg-gradient-to-b from-red-600 to-transparent mx-auto" />
-            </motion.div>
+            <a href="#projetos" className="bg-red-600 text-white px-10 py-4 font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-2">
+              Ver Galeria <ArrowRight size={18} />
+            </a>
           </div>
         </motion.div>
       </div>
@@ -123,45 +129,40 @@ const Hero = () => {
   );
 };
 
-const Portfolio = () => {
+const PortfolioGrid = () => {
   const [selected, setSelected] = useState<any>(null);
 
   return (
-    <section id="projetos" className="py-20 bg-black">
-      <div className="container mx-auto px-6 mb-20">
-        <div className="flex justify-between items-end border-b border-zinc-900 pb-10">
-          <div>
-            <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter">Selected<br/>Works</h2>
-          </div>
-          <div className="mono text-[10px] text-zinc-500 uppercase tracking-widest hidden md:block">
-            01 — GALERIA ATUALIZADA
-          </div>
+    <section id="projetos" className="py-32 bg-black">
+      <div className="container mx-auto px-6 mb-16">
+        <div className="flex items-baseline justify-between border-b border-zinc-900 pb-8">
+          <h2 className="text-5xl md:text-8xl font-black italic uppercase tracking-tighter">Trabalhos</h2>
+          <span className="mono text-xs text-zinc-600 uppercase">2023 — 2024</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 auto-rows-[300px] md:auto-rows-[450px] gap-4 px-4 md:px-10">
-        {PROJECTS.map((project, idx) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 auto-rows-[400px] md:auto-rows-[550px] gap-4 px-4 md:px-8">
+        {PROJECTS.map((p, i) => (
           <motion.div
-            key={project.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            key={p.id}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: idx * 0.1 }}
-            className={`relative group cursor-none overflow-hidden bg-zinc-900 ${
-              project.size === 'large' ? 'lg:col-span-8' : 'lg:col-span-4'
-            }`}
-            onClick={() => setSelected(project)}
+            transition={{ delay: i * 0.1 }}
+            className={`relative group overflow-hidden bg-zinc-900 ${p.size === 'large' ? 'lg:col-span-8' : 'lg:col-span-4'}`}
+            onClick={() => setSelected(p)}
           >
             <img 
-              src={project.url} 
-              className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110 grayscale"
+              src={p.url} 
+              className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+              alt={p.title}
             />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-               <Maximize2 className="text-white scale-0 group-hover:scale-100 transition-transform duration-500" size={40} />
+            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center cursor-pointer">
+              <Maximize2 className="text-white scale-50 group-hover:scale-100 transition-transform" size={48} />
             </div>
-            <div className="absolute bottom-6 left-6 z-20">
-               <p className="mono text-[10px] uppercase text-red-600 mb-1">{project.category}</p>
-               <h3 className="text-2xl font-black italic uppercase tracking-tighter">{project.title}</h3>
+            <div className="absolute bottom-8 left-8">
+              <span className="mono text-[10px] text-red-600 uppercase tracking-widest block mb-2">{p.category}</span>
+              <h3 className="text-3xl font-black italic uppercase tracking-tight">{p.title}</h3>
             </div>
           </motion.div>
         ))}
@@ -170,13 +171,16 @@ const Portfolio = () => {
       <AnimatePresence>
         {selected && (
           <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[300] bg-black p-4 md:p-12 flex items-center justify-center"
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[300] bg-black/98 flex items-center justify-center p-6"
             onClick={() => setSelected(null)}
           >
-            <button className="absolute top-10 right-10 z-50"><X size={40} /></button>
+            <button className="absolute top-10 right-10 hover:text-red-600 transition-colors"><X size={40} /></button>
             <motion.img 
-              layoutId={`img-${selected.id}`}
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
               src={selected.url} 
               className="max-w-full max-h-full object-contain shadow-2xl"
             />
@@ -189,30 +193,30 @@ const Portfolio = () => {
 
 const Footer = () => {
   return (
-    <footer id="contato" className="bg-zinc-950 py-40 px-6">
-      <div className="container mx-auto">
-        <div className="flex flex-col items-center text-center">
-          <motion.h2 
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-            className="text-4xl md:text-[6rem] font-black italic uppercase tracking-tighter leading-none mb-10"
-          >
-            LET'S SHOOT <br/>
-            <span className="text-red-600">TOGETHER</span>
-          </motion.h2>
+    <footer id="contato" className="bg-zinc-950 py-32 border-t border-white/5">
+      <div className="container mx-auto px-6 text-center">
+        <h2 className="text-4xl md:text-[8rem] font-black italic uppercase tracking-tighter leading-none mb-12">
+          CONTATO <span className="text-red-600">IMEDIATO</span>
+        </h2>
+        
+        <div className="flex flex-col items-center gap-10">
+          <a href="mailto:contato@mdias.photography" className="text-2xl md:text-5xl font-black italic border-b-2 border-red-600 pb-2 hover:text-red-600 transition-colors">
+            CONTATO@MDIAS.COM.BR
+          </a>
           
-          <div className="flex flex-col md:flex-row gap-10 md:gap-20 items-center">
-            <a href="mailto:hello@mdias.co" className="text-2xl font-bold border-b-2 border-red-600 pb-2 hover:text-red-600 transition-colors">
-              HELLO@MDIAS.CO
-            </a>
-            <div className="flex gap-6">
-              <span className="mono text-xs uppercase tracking-widest text-zinc-500">Instagram / Behance / LinkedIn</span>
-            </div>
+          <div className="flex gap-10">
+            <Instagram size={32} className="hover:text-red-600 cursor-pointer transition-colors" />
+            <div className="w-[1px] h-8 bg-zinc-800" />
+            <span className="mono text-xs uppercase tracking-widest text-zinc-500 self-center">São Paulo / SP</span>
           </div>
         </div>
 
-        <div className="mt-40 pt-10 border-t border-zinc-900 flex justify-between items-center text-zinc-600 mono text-[8px] uppercase tracking-widest">
-          <span>MDIAS — © 2024 PORTFOLIO</span>
-          <span>CRAFTED FOR SPEED</span>
+        <div className="mt-40 flex flex-col md:flex-row justify-between items-center gap-6 mono text-[10px] text-zinc-700 uppercase tracking-[0.3em]">
+          <span>© 2024 MDIAS — DIREITOS RESERVADOS</span>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-white transition-colors">BEHANCE</a>
+            <a href="#" className="hover:text-white transition-colors">LINKEDIN</a>
+          </div>
         </div>
       </div>
     </footer>
@@ -223,24 +227,22 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulação de carregamento de assets
-    const timer = setTimeout(() => setLoading(false), 2000);
+    const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className="bg-black selection:bg-red-600 selection:text-white">
+    <div className="bg-black text-white selection:bg-red-600 selection:text-white">
       <AnimatePresence>
         {loading && (
           <motion.div 
-            exit={{ y: '-100%' }}
-            transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 z-[500] bg-zinc-950 flex flex-col items-center justify-center"
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[500] bg-black flex items-center justify-center"
           >
             <motion.div 
               animate={{ opacity: [0, 1, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="text-2xl font-black italic tracking-tighter"
+              transition={{ repeat: Infinity, duration: 1.2 }}
+              className="text-3xl font-black italic tracking-tighter"
             >
               MDIAS<span className="text-red-600">.</span>
             </motion.div>
@@ -248,13 +250,23 @@ const App = () => {
         )}
       </AnimatePresence>
 
-      <Navbar />
-      <Hero />
-      <Portfolio />
-      <Footer />
+      {!loading && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <Navbar />
+          <Hero />
+          <PortfolioGrid />
+          <Footer />
+        </motion.div>
+      )}
     </div>
   );
 };
 
-const root = createRoot(document.getElementById('root')!);
-root.render(<App />);
+// Renderização segura
+const container = document.getElementById('root');
+if (container) {
+  const root = createRoot(container);
+  root.render(<App />);
+} else {
+  console.error("Erro: Elemento #root não encontrado no DOM.");
+}

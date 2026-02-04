@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MDIAS | Studio de Fotografia</title>
+    <title>MDIAS | Action Photography</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -13,7 +13,7 @@
     "react": "https://esm.sh/react@19.0.0",
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "framer-motion": "https://esm.sh/framer-motion@12.0.0-alpha.0?external=react,react-dom",
+    "framer-motion": "https://esm.sh/framer-motion@11.11.17?external=react,react-dom",
     "lucide-react": "https://esm.sh/lucide-react@0.454.0?external=react,react-dom",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/"
@@ -34,21 +34,25 @@
             color: #fff;
             margin: 0;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         .mono { font-family: 'JetBrains Mono', monospace; }
 
-        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: var(--accent); }
+
+        /* Camada base para evitar flash branco */
+        #root {
+            background-color: #000;
+            min-height: 100vh;
+        }
 
         .text-outline {
             -webkit-text-stroke: 1px rgba(255,255,255,0.3);
             color: transparent;
         }
-        
-        /* Previne flash branco no carregamento */
-        html { background: #000; }
     </style>
 <link rel="stylesheet" href="/index.css">
 </head>
