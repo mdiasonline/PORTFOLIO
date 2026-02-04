@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { 
@@ -66,7 +65,7 @@ const Navbar = () => {
 
 const PortfolioApp = () => {
   const [filter, setFilter] = useState('Todos');
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<any>(null);
 
   const categories = ['Todos', 'Futebol', 'Corrida', 'Basquete', 'Radicais'];
   
@@ -177,7 +176,7 @@ const PortfolioApp = () => {
             <button className="absolute top-10 right-10 text-white/50 hover:text-white"><X size={40} /></button>
             <motion.img 
               initial={{ scale: 0.9 }} animate={{ scale: 1 }}
-              src={(selectedPhoto as any).url} 
+              src={selectedPhoto.url} 
               className="max-w-full max-h-full object-contain"
             />
           </motion.div>
